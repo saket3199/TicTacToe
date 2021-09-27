@@ -19,37 +19,60 @@ type Board struct {
 	Size  int
 }
 
-func (b Board) SetSize(Size int) {
+func (b *Board) SetSize(Size int) {
 	b.Size = Size
 }
-func (b Board) GetSize() int {
+func (b *Board) GetSize() int {
 	return b.Size
 }
 
-func (b Board) GetBoard() [][]cell.Cell {
-	return b.Board
+var board Board
+
+func New(size int) *Board {
+	board.SetSize(size)
+	slice := make([][]cell.Cell, 0, size)
+
+	for i := 0; i < size; i++ {
+		row := make([]cell.Cell, size)
+		for j := range row {
+			fmt.Scan(&row[j])
+		}
+		slice = append(slice, row)
+
+	}
+	board = Board{
+		slice,
+		board.Size,
+	}
+
+	fmt.Println(slice)
+	return &board
 }
 
-func (b Board) GetCell(i, j int) cell.Cell {
-	return b.Board[i][j]
+func (b *Board) GetBoard() *[][]cell.Cell {
+	return &b.Board
 }
-func (b Board) GetCells() [][]cell.Cell {
+
+func (b *Board) GetCell(i, j int) *cell.Cell {
+	return &b.Board[i][j]
+}
+func (b Board) GetAllCells() [][]cell.Cell {
 	return b.Board
 }
 func GenerateBoard(b [][]cell.Cell) {
 	for i := 0; i < len(b); i++ {
 		for j := 0; j < len(b); j++ {
 			// cell := cell.Cell
-			b[i][j] = cell.Cell{Mark: ""}
+			b[i][j] = cell.Newcell()
 		}
 
 	}
 }
 
-func BoardIsFull(b [][]cell.Cell) bool {
+func IsBoardFull(b [][]cell.Cell) bool {
 	for i := 0; i < len(b); i++ {
 		for j := 0; j < len(b); j++ {
-			if b[i][j].GetCellMark() == "" {
+			if b[i][j].GetCellMark() == cell.NoMark {
 				return false
 			}
 		}
@@ -58,21 +81,22 @@ func BoardIsFull(b [][]cell.Cell) bool {
 	return true
 
 }
-func PrintBoard(b [9]string) {
-	ClearScreen()
-	for i, v := range b {
-		if v == "" {
-			fmt.Printf(" ")
-		} else {
-			fmt.Print(v)
-		}
 
-		if i > 0 && (i+1)%3 == 0 {
-			fmt.Printf("\n")
-		} else {
-			fmt.Printf("|")
+// func PrintBoard(b [9]string) {
+// 	ClearScreen()
+// 	for i, v := range b {
+// 		if v == "" {
+// 			fmt.Printf(" ")
+// 		} else {
+// 			fmt.Print(v)
+// 		}
 
-		}
+// 		if i > 0 && (i+1)%3 == 0 {
+// 			fmt.Printf("\n")
+// 		} else {
+// 			fmt.Printf("|")
 
-	}
-}
+// 		}
+
+// 	}
+// }

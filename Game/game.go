@@ -3,97 +3,85 @@ package Game
 import (
 	"github.com/saket3199/TicTacToe/Board"
 	"github.com/saket3199/TicTacToe/analyzer"
+	"github.com/saket3199/TicTacToe/cell"
 	"github.com/saket3199/TicTacToe/player"
 )
 
-var row, col int
-
 type Game struct {
-	Board [][]Board.Board
-	Size  int
-
-	// Player     string
-	// TurnNumber int
+	Board.Board
 	Players []player.Player
+	row     int
+	col     int
+	c       string
 }
 
-func (g *Game) NewGame(Size int) {
-	g.Size = 3
-	g.Board = make([][]Board.Board, 3)
-	g.Players = make([]player.Player, 2)
-	// for i := 0; i < Size; i++ {
-	// 	g.Board = append(g.Board, "")
-	// }
-	// g.Board.SetSize(Size)
+func New(Size int) *Game {
 
+	game := Game{
+		*Board.New(Size),
+		make([]player.Player, 0, 2),
+		0,
+		0,
+		cell.NoMark,
+	}
+	Board.GenerateBoard(*game.GetBoard().GetBoard())
+	return &game
 }
-func (g *Game) GetSize() int {
-	return g.Size
-}
-func (g *Game) SetSize(Size int) {
-	g.Size = Size
-}
-func (g Game) GetBoard() Board.Board {
-	return g.Board[g.Size][g.Size]
+
+func (g *Game) GetBoard() *Board.Board {
+	return &g.Board
 }
 func (g *Game) PutMark(position []int) int {
-	var c string
-	c = ""
+
+	g.row = position[0]
+	g.col = position[1]
+
 	if g.Players[0].GetPlayerState() {
-		c = "X"
-		g.Players[0].SetPlayerState(false)
-		g.Players[1].SetPlayerState(true)
+		g.c = cell.XMark
 
 	} else if g.Players[1].GetPlayerState() {
-		c = "O"
-		g.Players[0].SetPlayerState(true)
-		g.Players[1].SetPlayerState(false)
-
+		g.c = cell.OMark
 	}
-	g.GetBoard().GetCells()[row][col].SetCellMark(c)
-	row = position[0]
-	col = position[1]
-	if row < 0 || col < 0 || row > g.Size-1 || col > g.Size-1 {
+
+	// g.GetCell(row, col).SetCellMark(c)
+
+	if g.row < 0 || g.col < 0 || g.row > g.GetBoard().GetSize()-1 || g.col > g.GetBoard().GetSize()-1 {
 		return 1
 
-	} else if g.GetBoard().GetCells()[row][col] != g.GetBoard().GetCells()[row][col] {
-		// GetCells()[g.row][g.col] != g.GetBoard().Cells[g.row][g.col] {
+	} else if g.GetBoard().GetCell(g.row, g.col).GetCellMark() != cell.NoMark {
 		return 2
 	}
 	return 0
 
 }
-func TakeInput() int {
-	if player1.GetPlayerState() {
-		player1.SetPlayerState(false)
-		player2.SetPlayerState(true)
+func (g *Game) TakeInput() int {
+	if g.Players[0].GetPlayerState() && !g.Players[1].GetPlayerState() {
 		return 1
-	} else if player2.GetPlayerState() {
-		player1.SetPlayerState(true)
-		player2.SetPlayerState(false)
+	} else if !g.Players[0].GetPlayerState() && g.Players[1].GetPlayerState() {
 		return 2
-
 	}
 	return 0
-
 }
 
-func (g Game) ResultAnalysis() int {
-	if analyzer.PlayerHasWon(g.GetBoard().GetCells()) == "X" {
+func (g *Game) ResultAnalysis() int {
+	if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == cell.XMark {
 		return 1
-	} else if analyzer.PlayerHasWon(g.GetBoard().GetCells()) == "O" {
+	} else if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == cell.OMark {
 
 		return 2
 	} else {
-		if Board.BoardIsFull(g.GetBoard().GetCells()) {
+		if Board.IsBoardFull(g.GetBoard().GetAllCells()) {
 			return 3
 		} else {
-			// p11 := g.Players[0].GetPlayerState()
-			// p11 = !g.Players[0].GetPlayerState()
 			g.Players[0].SetPlayerState(!g.Players[0].GetPlayerState())
+			g.Players[1].SetPlayerState(!g.Players[1].GetPlayerState())
 		}
 	}
 	return 0
+}
+
+func (g *Game) SetMark() {
+	g.GetBoard().GetCell(g.row, g.col).SetCellMark(g.c)
 }
 
 // func Askforplay() int {

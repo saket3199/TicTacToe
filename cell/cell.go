@@ -10,11 +10,11 @@ type Cell struct {
 	Mark string
 }
 
-func Newcell() *Cell {
+func Newcell() Cell {
 	cell := Cell{
 		Mark: NoMark,
 	}
-	return &cell
+	return cell
 }
 
 func (c *Cell) SetCellMark(Mark string) {
@@ -25,5 +25,5 @@ func (c *Cell) GetCellMark() string {
 }
 
 func (c *Cell) CellTaken() bool {
-	return c.Mark != ""
+	return c.Mark != NoMark
 }

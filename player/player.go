@@ -5,6 +5,13 @@ type Player struct {
 	PlayerTurn bool
 }
 
+func New(name string, state bool) *Player {
+	player := Player{
+		PlayerName: name,
+		PlayerTurn: state,
+	}
+	return &player
+}
 func (p *Player) SetPlayerName(Name string) {
 	p.PlayerName = Name
 }
