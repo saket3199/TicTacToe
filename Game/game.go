@@ -1,6 +1,8 @@
 package Game
 
 import (
+	"strconv"
+
 	"github.com/saket3199/TicTacToe/Board"
 	"github.com/saket3199/TicTacToe/analyzer"
 	"github.com/saket3199/TicTacToe/cell"
@@ -44,11 +46,12 @@ func (g *Game) PutMark(position []uint8) uint8 {
 	}
 
 	// g.GetCell(row, col).SetCellMark(c)
+	pos := g.row*g.GetBoard().GetSize() + g.col
 
-	if g.row < 0 || g.col < 0 || g.row > g.GetBoard().GetSize()-1 || g.col > g.GetBoard().GetSize()-1 {
+	if g.row > g.GetBoard().GetSize()-1 || g.col > g.GetBoard().GetSize()-1 {
 		return 1
 
-	} else if g.GetBoard().GetCell(g.row, g.col).GetCellMark() != cell.NoMark {
+	} else if g.GetBoard().GetCell(g.row, g.col).GetCellMark() != strconv.Itoa(int(pos)) {
 		return 2
 	}
 	return 0

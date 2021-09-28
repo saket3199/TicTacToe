@@ -3,6 +3,8 @@ package Game
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 
 	"github.com/saket3199/TicTacToe/cell"
 	"github.com/saket3199/TicTacToe/player"
@@ -44,7 +46,7 @@ label:
 }
 func GetBoardSize() uint8 {
 	var size uint8
-	fmt.Println("Enter Board Size")
+	fmt.Println("Enter Board Size between 3 to 7")
 	if _, err := fmt.Scan(&size); err != nil {
 		log.Print("  Scan for row failed, due to ", err)
 	}
@@ -93,7 +95,7 @@ func Play() {
 		DrawBoard(game.GetAllCells())
 		WhoseTurn(game.TakeInput(), game.Players)
 		for {
-			i := game.PutMark(UserPosition())
+			i := game.PutMark(UserPosition(size))
 			if i == 1 || i == 2 {
 				BoardValidator(i)
 			} else {
@@ -147,17 +149,36 @@ func BoardValidator(i uint8) {
 		fmt.Println("Error")
 	}
 }
-func UserPosition() []uint8 {
+func UserPosition(size uint8) []uint8 {
 	var row, col uint8
-	fmt.Println("Enter a row number (0, 1, or 2): ")
-	if _, err := fmt.Scan(&row); err != nil {
-		log.Print("  Scan for row failed, due to ", err)
+	var pos int
+takeUserPosition:
+	fmt.Println("Enter a Position to Play: ")
+	if _, err := fmt.Scan(&pos); err != nil {
+		log.Print("Scan for row failed, due to ", err)
+		goto takeUserPosition
 	}
+	row = uint8(pos / int(size))
+	col = uint8(pos) % size
 
-	fmt.Println("Enter a column number (0, 1, or 2): ")
-	if _, err := fmt.Scan(&col); err != nil {
-		log.Print("  Scan for col failed, due to ", err)
-	}
+	// for i := 0; i < int(size); i++ {
+	// 	for j := 0; j < int(size); j++ {
+	// 		if pos == (i*int(size) + j + 1) {
+	// 			row = uint8(i)
+	// 			col = uint8(j)
+	// 		}
+	// 	}
+	// }
+	fmt.Println(row, col)
+	// fmt.Println("Enter a row number (0, 1, or 2): ")
+	// if _, err := fmt.Scan(&row); err != nil {
+	// 	log.Print("  Scan for row failed, due to ", err)
+	// }
+
+	// fmt.Println("Enter a column number (0, 1, or 2): ")
+	// if _, err := fmt.Scan(&col); err != nil {
+	// 	log.Print("  Scan for col failed, due to ", err)
+	// }
 
 	positions := []uint8{}
 	positions = append(positions, row)
@@ -174,6 +195,9 @@ func PlayAgain() {
 	fmt.Scan(&answer)
 	if answer == "y" || answer == "Y" {
 		Play()
+		c := exec.Command("cmd", "/c", "cls")
+		c.Stdout = os.Stdout
+		c.Run()
 	}
 
 }

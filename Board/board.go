@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 
 	"github.com/saket3199/TicTacToe/cell"
 )
@@ -60,10 +61,12 @@ func (b Board) GetAllCells() [][]cell.Cell {
 	return b.Board
 }
 func GenerateBoard(b [][]cell.Cell) {
+	count := 0
 	for i := 0; i < len(b); i++ {
 		for j := 0; j < len(b); j++ {
 			// cell := cell.Cell
-			b[i][j] = cell.Newcell()
+			b[i][j].SetCellMark(strconv.Itoa(count))
+			count++
 		}
 
 	}
