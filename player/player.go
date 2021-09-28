@@ -6,11 +6,10 @@ type Player struct {
 }
 
 func New(name string, state bool) *Player {
-	player := Player{
+	return &Player{
 		PlayerName: name,
 		PlayerTurn: state,
 	}
-	return &player
 }
 func (p *Player) SetPlayerName(Name string) {
 	p.PlayerName = Name

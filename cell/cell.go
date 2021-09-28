@@ -11,10 +11,9 @@ type Cell struct {
 }
 
 func Newcell() Cell {
-	cell := Cell{
+	return Cell{
 		Mark: NoMark,
 	}
-	return cell
 }
 
 func (c *Cell) SetCellMark(Mark string) {

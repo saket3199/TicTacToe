@@ -4,25 +4,25 @@ import "github.com/saket3199/TicTacToe/cell"
 
 func PlayerHasWon(board [][]cell.Cell) string {
 	for i := 0; i < len(board); i++ {
-		if board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0].GetCellMark() != "" {
+		if board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0].GetCellMark() != cell.NoMark {
 			return board[i][0].GetCellMark()
 		}
 	}
 
 	for j := 0; j < len(board); j++ {
-		if board[0][j] == board[1][j] && board[1][j] == board[2][j] && board[0][j].GetCellMark() != "" {
+		if board[0][j] == board[1][j] && board[1][j] == board[2][j] && board[0][j].GetCellMark() != cell.NoMark {
 			return board[0][j].GetCellMark()
 		}
 	}
 
-	if board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0].GetCellMark() != "" {
+	if board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0].GetCellMark() != cell.NoMark {
 		return board[0][0].GetCellMark()
 	}
-	if board[2][0] == board[1][1] && board[1][1] == board[0][2] && board[2][0].GetCellMark() != "" {
+	if board[2][0] == board[1][1] && board[1][1] == board[0][2] && board[2][0].GetCellMark() != cell.NoMark {
 		return board[2][0].GetCellMark()
 	}
 
-	return ""
+	return cell.NoMark
 }
 
 // func CheckForWinner(b [9]string, n int) (bool, string) {
