@@ -57,21 +57,21 @@ func AskPlayerMark(players []player.Player) {
 	fmt.Println("Choose Your Mark :")
 	var mark1, mark2 string
 player1Mark:
-	fmt.Println(players[0].GetPlayerName(), "Enter a Mark")
+	fmt.Println(players[0].GetPlayerName(), "Enter a Single Alphabet")
 	if _, err := fmt.Scan(&mark1); err != nil {
 		log.Print("  Scan for row failed, due to ", err)
 		goto player1Mark
 
 	}
 player2Mark:
-	fmt.Println(players[1].GetPlayerName(), "Enter a Mark")
+	fmt.Println(players[1].GetPlayerName(), "Enter a Single Alphabet")
 	if _, err := fmt.Scan(&mark2); err != nil {
 		log.Print("  Scan for row failed, due to ", err)
 		goto player2Mark
 
 	}
-	players[0].SetPlayerMark(mark1)
-	players[1].SetPlayerMark(mark2)
+	players[0].SetPlayerMark(string(mark1[0]))
+	players[1].SetPlayerMark(string(mark2[0]))
 
 }
 func Play() {
