@@ -30,7 +30,7 @@ label:
 			PlayerName: p2,
 			PlayerTurn: false,
 		}
-		// player.New(p2, false)
+
 		*players = append(*players, player1)
 		*players = append(*players, player2)
 		AskPlayerMark(*players)
@@ -39,10 +39,6 @@ label:
 		goto label
 	}
 
-	// Game.Players = append(game.Players, player1)
-	// Game.Players = append(game.Players, player2)
-	// game.Players = append(game.Players, player1)
-	// game.Players = append(game.Players, player2)
 }
 func GetBoardSize() uint8 {
 	var size uint8
@@ -170,16 +166,6 @@ takeUserPosition:
 	// 	}
 	// }
 	fmt.Println(row, col)
-	// fmt.Println("Enter a row number (0, 1, or 2): ")
-	// if _, err := fmt.Scan(&row); err != nil {
-	// 	log.Print("  Scan for row failed, due to ", err)
-	// }
-
-	// fmt.Println("Enter a column number (0, 1, or 2): ")
-	// if _, err := fmt.Scan(&col); err != nil {
-	// 	log.Print("  Scan for col failed, due to ", err)
-	// }
-
 	positions := []uint8{}
 	positions = append(positions, row)
 	positions = append(positions, col)
@@ -191,13 +177,14 @@ func PlayAgain() {
 
 	var answer string
 	fmt.Println("Do you want to Play Again?")
-	fmt.Println("Enter Y to Play Again  or\n Press any other Key to exit")
+	fmt.Println("Enter Y to Play Again  or \nPress any other Key to exit")
 	fmt.Scan(&answer)
 	if answer == "y" || answer == "Y" {
-		Play()
 		c := exec.Command("cmd", "/c", "cls")
 		c.Stdout = os.Stdout
 		c.Run()
+		Play()
+
 	}
 
 }
