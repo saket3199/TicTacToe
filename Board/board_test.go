@@ -41,3 +41,17 @@ func TestIsBoardFull(t *testing.T) {
 
 	}
 }
+
+func TestBoardSize(t *testing.T) {
+	actualSize := 3
+	b := New(uint8(actualSize))
+	if b.GetSize() != uint8(actualSize) {
+		t.Error("Actual Value is ", actualSize, "but excepted is : ", b.GetSize())
+	}
+
+	b.SetSize(uint8(actualSize))
+	if b.GetSize() != uint8(actualSize) {
+		t.Error("Actual Value is ", actualSize, "but excepted is : ", b.GetSize())
+	}
+}
+

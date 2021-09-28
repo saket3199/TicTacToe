@@ -16,23 +16,23 @@ func ClearScreen() {
 
 type Board struct {
 	Board [][]cell.Cell
-	Size  int
+	Size  uint8
 }
 
-func (b *Board) SetSize(Size int) {
+func (b *Board) SetSize(Size uint8) {
 	b.Size = Size
 }
-func (b *Board) GetSize() int {
+func (b *Board) GetSize() uint8 {
 	return b.Size
 }
 
 var board Board
 
-func New(size int) *Board {
+func New(size uint8) *Board {
 	board.SetSize(size)
 	slice := make([][]cell.Cell, 0, size)
-
-	for i := 0; i < size; i++ {
+	var i uint8
+	for i = 0; i < size; i++ {
 		row := make([]cell.Cell, size)
 		for j := range row {
 			fmt.Scan(&row[j])
@@ -53,7 +53,7 @@ func (b *Board) GetBoard() *[][]cell.Cell {
 	return &b.Board
 }
 
-func (b *Board) GetCell(i, j int) *cell.Cell {
+func (b *Board) GetCell(i, j uint8) *cell.Cell {
 	return &b.Board[i][j]
 }
 func (b Board) GetAllCells() [][]cell.Cell {
@@ -81,6 +81,11 @@ func IsBoardFull(b [][]cell.Cell) bool {
 	return true
 
 }
+
+//board size validation done
+// no same player name done
+// ask player mark done
+// first 5 dosen't send to anayalzer
 
 // func PrintBoard(b [9]string) {
 // 	ClearScreen()

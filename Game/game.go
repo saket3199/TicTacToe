@@ -10,12 +10,12 @@ import (
 type Game struct {
 	Board.Board
 	Players []player.Player
-	row     int
-	col     int
+	row     uint8
+	col     uint8
 	c       string
 }
 
-func New(Size int) *Game {
+func New(Size uint8) *Game {
 
 	game := Game{
 		*Board.New(Size),
@@ -31,16 +31,16 @@ func New(Size int) *Game {
 func (g *Game) GetBoard() *Board.Board {
 	return &g.Board
 }
-func (g *Game) PutMark(position []int) int {
+func (g *Game) PutMark(position []uint8) uint8 {
 
 	g.row = position[0]
 	g.col = position[1]
 
 	if g.Players[0].GetPlayerState() {
-		g.c = cell.XMark
+		g.c = g.Players[0].GetPlayerMark()
 
 	} else if g.Players[1].GetPlayerState() {
-		g.c = cell.OMark
+		g.c = g.Players[1].GetPlayerMark()
 	}
 
 	// g.GetCell(row, col).SetCellMark(c)
@@ -54,7 +54,7 @@ func (g *Game) PutMark(position []int) int {
 	return 0
 
 }
-func (g *Game) TakeInput() int {
+func (g *Game) TakeInput() uint8 {
 	if g.Players[0].GetPlayerState() && !g.Players[1].GetPlayerState() {
 		return 1
 	} else if !g.Players[0].GetPlayerState() && g.Players[1].GetPlayerState() {
@@ -63,25 +63,29 @@ func (g *Game) TakeInput() int {
 	return 0
 }
 
-func (g *Game) ResultAnalysis() int {
-	if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == cell.XMark {
+func (g *Game) ResultAnalysis() uint8 {
+	if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == g.Players[0].GetPlayerMark() {
 		return 1
-	} else if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == cell.OMark {
+	} else if analyzer.PlayerHasWon(g.GetBoard().GetAllCells()) == g.Players[1].GetPlayerMark() {
 
 		return 2
 	} else {
 		if Board.IsBoardFull(g.GetBoard().GetAllCells()) {
 			return 3
 		} else {
-			g.Players[0].SetPlayerState(!g.Players[0].GetPlayerState())
-			g.Players[1].SetPlayerState(!g.Players[1].GetPlayerState())
+			g.ChangeTurn()
 		}
+		return 0
 	}
-	return 0
 }
 
 func (g *Game) SetMark() {
 	g.GetBoard().GetCell(g.row, g.col).SetCellMark(g.c)
+}
+
+func (g *Game) ChangeTurn() {
+	g.Players[0].SetPlayerState(!g.Players[0].GetPlayerState())
+	g.Players[1].SetPlayerState(!g.Players[1].GetPlayerState())
 }
 
 // func Askforplay() int {

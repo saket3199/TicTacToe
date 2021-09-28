@@ -11,39 +11,80 @@ import (
 // var player1, player2 player.Player
 
 func GetUserName(players *[]player.Player) {
+
 	var p1, p2 string
 	fmt.Println("Let's Play Tic Tac Toe!")
 	fmt.Println("Player 1, What's Your Name?")
 	fmt.Scan(&p1)
+label:
 	fmt.Println("Player 2, What's Your Name?")
 	fmt.Scan(&p2)
 	player1 := player.Player{
 		PlayerName: p1,
 		PlayerTurn: true,
 	}
-	player2 := player.Player{
-		PlayerName: p2,
-		PlayerTurn: false,
+	if p1 != p2 {
+		player2 := player.Player{
+			PlayerName: p2,
+			PlayerTurn: false,
+		}
+		// player.New(p2, false)
+		*players = append(*players, player1)
+		*players = append(*players, player2)
+		AskPlayerMark(*players)
+	} else {
+		log.Print("UserName Already Taken.", "Please Choose another name")
+		goto label
 	}
 
-	player.New(p2, false)
-	*players = append(*players, player1)
-	*players = append(*players, player2)
 	// Game.Players = append(game.Players, player1)
 	// Game.Players = append(game.Players, player2)
 	// game.Players = append(game.Players, player1)
 	// game.Players = append(game.Players, player2)
 }
-func GetBoardSize() int {
+func GetBoardSize() uint8 {
+	var size uint8
 	fmt.Println("Enter Board Size")
-	var size int
-	fmt.Scan(&size)
+	if _, err := fmt.Scan(&size); err != nil {
+		log.Print("  Scan for row failed, due to ", err)
+	}
 	return size
 }
-func Play() {
-	game := New(GetBoardSize())
-	var players []player.Player
 
+func AskPlayerMark(players []player.Player) {
+	fmt.Println("Choose Your Mark :")
+	var mark1, mark2 string
+player1Mark:
+	fmt.Println(players[0].GetPlayerName(), "Enter a Mark")
+	if _, err := fmt.Scan(&mark1); err != nil {
+		log.Print("  Scan for row failed, due to ", err)
+		goto player1Mark
+
+	}
+player2Mark:
+	fmt.Println(players[1].GetPlayerName(), "Enter a Mark")
+	if _, err := fmt.Scan(&mark2); err != nil {
+		log.Print("  Scan for row failed, due to ", err)
+		goto player2Mark
+
+	}
+	players[0].SetPlayerMark(mark1)
+	players[1].SetPlayerMark(mark2)
+
+}
+func Play() {
+	size := GetBoardSize()
+	var game *Game
+	if size >= 3 && size <= 7 {
+		game = New(size)
+	} else {
+		log.Print("Enter a Board Size between 3 to 7")
+		Play()
+	}
+
+	var players []player.Player
+	turnCount := 0
+	// AskPlayerMark(game.Players)
 	DrawBoard(game.GetBoard().GetAllCells())
 	GetUserName(&players)
 	game.Players = append(game.Players, players...)
@@ -60,11 +101,18 @@ func Play() {
 			}
 		}
 		game.SetMark()
-		i := game.ResultAnalysis()
-		if i == 1 || i == 2 || i == 3 {
-			PrintResult(i, game.Players)
-			break
+		turnCount++
+		if turnCount > 4 {
+			i := game.ResultAnalysis()
+			if i == 1 || i == 2 || i == 3 {
+				PrintResult(i, game.Players)
+				PlayAgain()
+				break
+			}
+		} else {
+			game.ChangeTurn()
 		}
+
 	}
 	DrawBoard(game.GetAllCells())
 
@@ -80,16 +128,16 @@ func DrawBoard(board [][]cell.Cell) {
 	}
 }
 
-func WhoseTurn(i int, p []player.Player) {
+func WhoseTurn(i uint8, p []player.Player) {
 	switch i {
 	case 1:
-		fmt.Println(p[0].GetPlayerName() + "'s Turn X")
+		fmt.Println(p[0].GetPlayerName()+"'s Turn ", p[0].GetPlayerMark())
 	case 2:
-		fmt.Println(p[1].GetPlayerName() + "'s Turn O")
+		fmt.Println(p[1].GetPlayerName()+"'s Turn ", p[1].GetPlayerMark())
 	}
 }
 
-func BoardValidator(i int) {
+func BoardValidator(i uint8) {
 	switch i {
 	case 1:
 		fmt.Println("This Position is Out of Bounds. Try Again !")
@@ -99,8 +147,8 @@ func BoardValidator(i int) {
 		fmt.Println("Error")
 	}
 }
-func UserPosition() []int {
-	var row, col int
+func UserPosition() []uint8 {
+	var row, col uint8
 	fmt.Println("Enter a row number (0, 1, or 2): ")
 	if _, err := fmt.Scan(&row); err != nil {
 		log.Print("  Scan for row failed, due to ", err)
@@ -111,13 +159,25 @@ func UserPosition() []int {
 		log.Print("  Scan for col failed, due to ", err)
 	}
 
-	positions := []int{}
+	positions := []uint8{}
 	positions = append(positions, row)
 	positions = append(positions, col)
 
 	return positions
 }
-func PrintResult(i int, p []player.Player) {
+
+func PlayAgain() {
+
+	var answer string
+	fmt.Println("Do you want to Play Again?")
+	fmt.Println("Enter Y to Play Again  or\n Press any other Key to exit")
+	fmt.Scan(&answer)
+	if answer == "y" || answer == "Y" {
+		Play()
+	}
+
+}
+func PrintResult(i uint8, p []player.Player) {
 	switch i {
 	case 1:
 		fmt.Println(p[0].GetPlayerName(), " has Won")
